@@ -1,42 +1,31 @@
-# General 
 library(tidyverse)
 library(skimr)
 library(rlist)
-# Preprocessing
 library(recipes)
 
 credit <- read_csv("application.csv")
 head(credit)
-
-#view
 skim_to_list(credit)
 
-#counts of missing value in each column
+#missings
 na_count <-sapply(credit, function(y) sum(length(which(is.na(y)))))
 na_count <- data.frame(na_count)
 na_count
 
-#percentage of missing value
 missing_tbl <- credit %>%
      summarize_all(.funs = ~ sum(is.na(.)) / length(.)) %>%
      gather() %>%
      arrange(desc(value)) %>%
      filter(value > 0)
-print(head(missing_tbl))
-
-#Shape: 65499 X 122
+                  
+print(head(missing_tbl))           
 dim(credit)
 
-# response varible "TARGET"
 target = 'TARGET'
-
-#Train predictors--exclude response
 x_train <- credit[ , !(names(credit) %in% target)]
 y_train <- credit[target] 
-
-#get the column name of char features
+                  
 character_col_name <- colnames(x_train[, sapply(x_train, class) == 'character'])
-
 #get the column name of numeric features whose unique counts less than 7
 unique_val <- x_train %>%
      select_if(is.numeric) %>%
@@ -50,7 +39,6 @@ num_col_name <- unique_val %>%
      arrange(desc(value)) %>%
      pull(key) %>%
      as.character()
-
 # gather functions for baking
 recipe_step <- recipe(~ ., data = x_train) %>%
      step_string2factor(character_col_name) %>%
@@ -59,29 +47,21 @@ recipe_step <- recipe(~ ., data = x_train) %>%
      step_modeimpute(all_nominal()) %>%
      prep(stringsAsFactors = FALSE)
 recipe_step
-
 #cleaned data
 x_train_processed <- bake(recipe_step, x_train) 
 
-#Process target training set
 y_train_processed <- y_train %>%
      mutate(TARGET = TARGET %>% as.character() %>% as.factor())
 
-#initialize h2o, and make train, validation, and test datasets
+#H2o 
 library(h2o)
-
-#starts h2o using all CPUs
 h2o.init(nthreads=-1)
-
-#create an h2o dataset
+#create an h2o dataset and train test val
 data_h2o <- as.h2o(bind_cols(y_train_processed, x_train_processed))
-
-#split data training, validation, and testing.
 splits_h2o <- h2o.splitFrame(data_h2o, ratios = c(0.7, 0.15), seed = 1234)
 train_h2o <- splits_h2o[[1]]
 valid_h2o <- splits_h2o[[2]]
 test_h2o  <- splits_h2o[[3]]
-
 y <- "TARGET"
 x <- setdiff(names(train_h2o), y)
 #AutoML from h2o that will create the ML models. 
