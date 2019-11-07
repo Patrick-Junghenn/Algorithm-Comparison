@@ -6,7 +6,6 @@ library(recipes)
 credit <- read_csv("application.csv")
 head(credit)
 skim_to_list(credit)
-
 #missings
 na_count <-sapply(credit, function(y) sum(length(which(is.na(y)))))
 na_count <- data.frame(na_count)
@@ -16,17 +15,16 @@ missing_tbl <- credit %>%
      summarize_all(.funs = ~ sum(is.na(.)) / length(.)) %>%
      gather() %>%
      arrange(desc(value)) %>%
-     filter(value > 0)
-                  
+     filter(value > 0)              
 print(head(missing_tbl))           
 dim(credit)
 
 target = 'TARGET'
 x_train <- credit[ , !(names(credit) %in% target)]
 y_train <- credit[target] 
-                  
+
+#preprocessing
 character_col_name <- colnames(x_train[, sapply(x_train, class) == 'character'])
-#get the column name of numeric features whose unique counts less than 7
 unique_val <- x_train %>%
      select_if(is.numeric) %>%
      map_df(~ unique(.) %>% length()) %>%
@@ -49,7 +47,6 @@ recipe_step <- recipe(~ ., data = x_train) %>%
 recipe_step
 #cleaned data
 x_train_processed <- bake(recipe_step, x_train) 
-
 y_train_processed <- y_train %>%
      mutate(TARGET = TARGET %>% as.character() %>% as.factor())
 
