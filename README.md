@@ -1,4 +1,4 @@
-## The Effectiveness of Logistic Regression When Applied to High Dimensional Data
+# The Effectiveness of Logistic Regression When Applied to High Dimensional Data
 #### The purpose of this analysis is to demonstrate the effectiveness of using Logistic Regression when confronted with high dimensional data
 This repository contains the code written to analyze the computational complexity of various machine learning algorithms when applied to credit loan data. It also contains an R Markdown file that delivers the analysis. The analysis shown below is taken directly from the analysis conducted in the R Markdown file.
 ### Introduction
