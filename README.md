@@ -1,8 +1,6 @@
 ## The Effectiveness of Logistic Regression When Applied to High Dimensional Data
 This repository contains the code written to analyze the computational complexity of various machine learning algorithms when applied to credit loan data. It also contains an R Markdown file that delivers the analysis. The analysis shown below is taken directly from the analysis conducted in the R Markdown file.
-
 ##### The purpose of this article is to demonstrate the effectiveness of using Logistic Regression when confronted with high dimensional data
-
 ### Introduction
 Although sophisticated machine learning models, such as Deep Neural Networks, Random Forests, and Gradient Boosted Machines, are known for their ability to achieve highly accurate results, they are not always the best option when working with high dimensional data. Logistic Regression is a powerful contender to some of the more advanced machine learning algorithms available when applied toward high dimensional data. Logistic regression belongs to a broader class of models called *Generalized Linear Models*, or, GLMs. GLMs have become the algorithm of choice for credit modeling.
 
